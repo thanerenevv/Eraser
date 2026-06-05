@@ -448,11 +448,7 @@
       </div>
     </div>
 
-    <!-- Status bar -->
-    <div class="status-bar">
-      <div class="status-dot loading" id="statusDot"></div>
-      <span id="statusText">Fetching available releases…</span>
-    </div>
+
 
   </main>
 
@@ -492,14 +488,6 @@
 
     const sel       = document.getElementById('versionSelect');
     const container = document.getElementById('installContainer');
-    const dot       = document.getElementById('statusDot');
-    const statusTxt = document.getElementById('statusText');
-
-    function setStatus(state, msg) {
-      dot.className = 'status-dot ' + state;
-      statusTxt.textContent = msg;
-    }
-
     /* Build a Blob URL for a manifest so esp-web-tools can load it */
     function buildManifestUrl(version, parts) {
       if (blobUrl) URL.revokeObjectURL(blobUrl);
@@ -560,7 +548,6 @@
       if (type === 'dev') {
         const url = buildManifestUrl('dev-' + BRANCH, FLASH_PARTS_DEV);
         renderButton(url);
-        setStatus('ready', `Using latest build from ${BRANCH} branch`);
         return;
       }
 
@@ -580,7 +567,6 @@
             <span>No <code style="font-size:11px">firmware.bin</code> found in release <strong>${ver}</strong>.</span>
             <span style="font-size:11px;margin-top:2px;">Attach firmware.bin, partitions.bin and bootloader.bin as release assets.</span>
           </div>`;
-        setStatus('warning', `Release ${ver} has no firmware assets`);
         return;
       }
 
@@ -590,7 +576,6 @@
 
       const url = buildManifestUrl(ver, parts);
       renderButton(url);
-      setStatus('ready', `Version ${ver} ready to flash`);
     }
 
     /* Fetch GitHub releases and populate the dropdown */
@@ -617,9 +602,6 @@
             opt.textContent    = r.tag_name + (r.prerelease ? '  (pre-release)' : '');
             sel.appendChild(opt);
           });
-          setStatus('ready', `${releases.length} release${releases.length > 1 ? 's' : ''} found`);
-        } else {
-          setStatus('ready', 'No releases yet — using master branch build');
         }
 
         sel.disabled = false;
@@ -628,7 +610,6 @@
       } catch (e) {
         sel.innerHTML = '<option data-type="dev" value="dev">Latest build (master)</option>';
         sel.disabled  = false;
-        setStatus('error', 'Could not reach GitHub API — defaulting to master branch');
         onVersionChange();
       }
     }
