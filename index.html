@@ -41,7 +41,6 @@
       padding: 64px 20px 48px;
     }
 
-    /* ─── Header ──────────────────────────────────── */
     .header {
       text-align: center;
       margin-bottom: 44px;
@@ -144,7 +143,6 @@
       background: var(--yellow);
     }
 
-    /* ─── Card ────────────────────────────────────── */
     .card {
       width: 100%;
       max-width: 460px;
@@ -154,7 +152,6 @@
       box-shadow: 0 2px 16px rgba(0,0,0,0.05);
     }
 
-    /* ─── Version row ─────────────────────────────── */
     .version-row {
       display: flex;
       align-items: center;
@@ -202,7 +199,6 @@
       cursor: not-allowed;
     }
 
-    /* ─── Steps ───────────────────────────────────── */
     .steps {
       padding: 24px 20px 20px;
       display: flex;
@@ -246,7 +242,6 @@
       line-height: 1.55;
     }
 
-    /* ─── Flash area ──────────────────────────────── */
     .flash-area {
       padding: 4px 20px 20px;
     }
@@ -319,7 +314,6 @@
       gap: 8px;
     }
 
-    /* ─── Status bar ──────────────────────────────── */
     .status-bar {
       display: flex;
       align-items: center;
@@ -351,7 +345,6 @@
       50%       { opacity: 0.25; }
     }
 
-    /* ─── Footer ──────────────────────────────────── */
     .footer {
       margin-top: 22px;
       display: flex;
@@ -379,7 +372,6 @@
       background: var(--border);
     }
 
-    /* ─── Loader spinner ──────────────────────────── */
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
       width: 14px;
@@ -394,7 +386,6 @@
 </head>
 <body>
 
-  <!-- ── Header ────────────────────────────────────── -->
   <header class="header" style="margin-top: 40px;">
     <div class="logo-row">
       <div class="wordmark" id="wordmark"></div>
@@ -403,17 +394,14 @@
 
   </header>
 
-  <!-- ── Card ──────────────────────────────────────── -->
   <main class="card">
 
-    <!-- Version selector -->
     <div class="version-row">
       <select class="version-select" id="versionSelect" disabled>
         <option>Loading releases…</option>
       </select>
     </div>
 
-    <!-- Steps -->
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
@@ -438,7 +426,6 @@
       </div>
     </div>
 
-    <!-- Flash button -->
     <div class="flash-area">
       <div id="installContainer">
         <div class="btn-placeholder">
@@ -452,7 +439,6 @@
 
   </main>
 
-  <!-- ── Footer ────────────────────────────────────── -->
   <footer class="footer">
     <a href="https://github.com/thanerenevv/Eraser" target="_blank" rel="noopener">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
@@ -477,7 +463,6 @@
       firmware:   `${RAW}/firmware.bin`,
     };
 
-    // ESP32-S3 standard PlatformIO flash offsets
     const OFFSETS = {
       bootloader: 0x0,      // 0
       partitions: 0x8000,   // 32768
@@ -488,7 +473,6 @@
 
     const sel       = document.getElementById('versionSelect');
     const container = document.getElementById('installContainer');
-    /* Build a Blob URL for a manifest so esp-web-tools can load it */
     function buildManifestUrl(version, parts) {
       if (blobUrl) URL.revokeObjectURL(blobUrl);
       const manifest = {
@@ -508,7 +492,6 @@
       return blobUrl;
     }
 
-    /* Recreate the install button with a new manifest */
     function renderButton(manifestUrl) {
       container.innerHTML = '';
       const el = document.createElement('esp-web-install-button');
@@ -531,7 +514,6 @@
       container.appendChild(el);
     }
 
-    /* Find a .bin asset by name inside a release's assets array */
     function findAsset(assets, name) {
       const a = assets.find(a =>
         a.name === name || a.name.toLowerCase().endsWith('/' + name)
@@ -539,7 +521,6 @@
       return a ? a.browser_download_url : null;
     }
 
-    /* Called whenever the version dropdown changes */
     function onVersionChange() {
       const opt  = sel.options[sel.selectedIndex];
       const type = opt.dataset.type;
@@ -551,7 +532,6 @@
         return;
       }
 
-      // Release: parse stored asset list
       let assets = [];
       try { assets = JSON.parse(opt.dataset.assets || '[]'); } catch (_) {}
 
@@ -570,7 +550,6 @@
         return;
       }
 
-      // Fill in dev fallbacks if release is missing bootloader/partitions
       if (!parts.bootloader) parts.bootloader = FLASH_PARTS_DEV.bootloader;
       if (!parts.partitions) parts.partitions = FLASH_PARTS_DEV.partitions;
 
@@ -578,7 +557,6 @@
       renderButton(url);
     }
 
-    /* Fetch GitHub releases and populate the dropdown */
     async function loadReleases() {
       try {
         const res      = await fetch(`https://api.github.com/repos/${REPO}/releases`);
@@ -586,7 +564,6 @@
 
         sel.innerHTML = '';
 
-        // Always offer the dev/master option first
         const devOpt = document.createElement('option');
         devOpt.value          = 'dev';
         devOpt.dataset.type   = 'dev';
@@ -617,7 +594,6 @@
     sel.addEventListener('change', onVersionChange);
     loadReleases();
 
-    // Typing animation
     (function typeWordmark() {
       const el     = document.getElementById('wordmark');
       const text   = 'ERASER';

@@ -371,4 +371,5 @@
  .pio/libdeps/esp32-s3-n16r8/lvgl/src/core/../layouts/lv_layout.h \
  src/ui/screen_base.h src/ui/theme.h src/ui/../config.h \
  src/ui/wifi_screen.h src/ui/bt_screen.h src/ui/rf_screen.h \
- src/ui/ir_screen.h src/ui/settings_screen.h src/ui/gpio_screen.h
+ src/ui/ir_screen.h src/ui/settings_screen.h src/ui/gpio_screen.h \
+ src/ui/ota_screen.h

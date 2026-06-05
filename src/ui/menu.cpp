@@ -8,10 +8,11 @@
 #include "ir_screen.h"
 #include "settings_screen.h"
 #include "gpio_screen.h"
+#include "ota_screen.h"
 #include <lvgl.h>
 #include <stdlib.h>
 
-#define HOME_ITEMS 6
+#define HOME_ITEMS 7
 
 #define ICON_BOX_W   64
 #define ICON_BOX_H   64
@@ -39,6 +40,7 @@ static const char *item_icons[HOME_ITEMS] = {
     LV_SYMBOL_SHUFFLE,
     LV_SYMBOL_EYE_OPEN,
     LV_SYMBOL_CHARGE,
+    LV_SYMBOL_DOWNLOAD,
     LV_SYMBOL_SETTINGS,
 };
 
@@ -48,6 +50,7 @@ static const char *item_names[HOME_ITEMS] = {
     "RF Radio",
     "Infrared",
     "GPIO",
+    "OTA",
     "Settings",
 };
 
@@ -56,10 +59,11 @@ static void go_bt(void)       { nav_push(bt_view_create()); }
 static void go_rf(void)       { nav_push(rf_view_create()); }
 static void go_ir(void)       { nav_push(ir_view_create()); }
 static void go_gpio(void)     { nav_push(gpio_view_create()); }
+static void go_ota(void)      { nav_push(ota_view_create()); }
 static void go_settings(void) { nav_push(settings_view_create()); }
 
 static const ItemAction item_actions[HOME_ITEMS] = {
-    go_wifi, go_bt, go_rf, go_ir, go_gpio, go_settings,
+    go_wifi, go_bt, go_rf, go_ir, go_gpio, go_ota, go_settings,
 };
 
 static void home_update(HomeCtx *ctx) {
