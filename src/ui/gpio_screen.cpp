@@ -1,4 +1,5 @@
 #include "gpio_screen.h"
+#include "eth_screen.h"
 #include "views.h"
 #include "screen_base.h"
 #include "menu_list.h"
@@ -421,16 +422,22 @@ static void open_pin(void *u) {
     nav_push(pin_view_create((int)(intptr_t)u));
 }
 
+static void open_eth(void *u) {
+    (void)u;
+    nav_push(eth_view_create());
+}
+
 AppView *gpio_view_create(void) {
     state_init();
-    static const MenuItem items[GPIO_EXPO_COUNT] = {
-        { LV_SYMBOL_CHARGE, "GPIO 1",  NULL, open_pin, (void *)(intptr_t)0 },
-        { LV_SYMBOL_CHARGE, "GPIO 2",  NULL, open_pin, (void *)(intptr_t)1 },
-        { LV_SYMBOL_CHARGE, "GPIO 3",  NULL, open_pin, (void *)(intptr_t)2 },
-        { LV_SYMBOL_CHARGE, "GPIO 45", NULL, open_pin, (void *)(intptr_t)3 },
-        { LV_SYMBOL_CHARGE, "GPIO 46", NULL, open_pin, (void *)(intptr_t)4 },
-        { LV_SYMBOL_CHARGE, "GPIO 47", NULL, open_pin, (void *)(intptr_t)5 },
-        { LV_SYMBOL_CHARGE, "GPIO 48", NULL, open_pin, (void *)(intptr_t)6 },
+    static const MenuItem items[] = {
+        { LV_SYMBOL_CHARGE, "GPIO 1",        NULL,  open_pin, (void *)(intptr_t)0 },
+        { LV_SYMBOL_CHARGE, "GPIO 2",        NULL,  open_pin, (void *)(intptr_t)1 },
+        { LV_SYMBOL_CHARGE, "GPIO 3",        NULL,  open_pin, (void *)(intptr_t)2 },
+        { LV_SYMBOL_CHARGE, "GPIO 45",       NULL,  open_pin, (void *)(intptr_t)3 },
+        { LV_SYMBOL_CHARGE, "GPIO 46",       NULL,  open_pin, (void *)(intptr_t)4 },
+        { LV_SYMBOL_CHARGE, "GPIO 47",       NULL,  open_pin, (void *)(intptr_t)5 },
+        { LV_SYMBOL_CHARGE, "GPIO 48",       NULL,  open_pin, (void *)(intptr_t)6 },
+        { LV_SYMBOL_LIST,   "W5500 Ethernet","SPI",  open_eth, NULL               },
     };
-    return list_view_create("GPIO", items, GPIO_EXPO_COUNT);
+    return list_view_create("GPIO", items, 8);
 }

@@ -370,8 +370,8 @@
  .pio/libdeps/esp32-s3-n16r8/lvgl/src/core/../stdlib/builtin/../../misc/lv_ll.h \
  .pio/libdeps/esp32-s3-n16r8/lvgl/src/core/../tick/lv_tick.h \
  .pio/libdeps/esp32-s3-n16r8/lvgl/src/core/../layouts/lv_layout.h \
- src/ui/views.h src/ui/menu_list.h src/ui/screen_base.h src/ui/theme.h \
- src/ui/../config.h \
+ src/ui/eth_screen.h src/ui/views.h src/ui/menu_list.h \
+ src/ui/screen_base.h src/ui/theme.h src/ui/../config.h \
  /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h \
  /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/newlib/platform_include/stdio.h \
  /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp_arduino_version.h \

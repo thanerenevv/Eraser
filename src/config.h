@@ -60,3 +60,8 @@
 #define GPIO_PIN_4       46
 #define GPIO_PIN_5       47
 #define GPIO_PIN_6       48
+
+#define ETH_SCK_PIN    GPIO_PIN_3   // GPIO 45
+#define ETH_MISO_PIN   GPIO_PIN_4   // GPIO 46
+#define ETH_MOSI_PIN   GPIO_PIN_5   // GPIO 47
+#define ETH_CS_PIN     GPIO_PIN_6   // GPIO 48
