@@ -264,13 +264,9 @@ static AppView *display_info_view_create(void) {
 
 static AppView *about_view_create(void) {
     return info_view_create("ABOUT",
-        "RF Multitool v1.0\n"
+        "Eraser v0.0.1\n"
         "Platform: ESP32-S3 N16R8\n"
-        "Flash: 16MB  PSRAM: 8MB\n"
-        "UI: LVGL 9 + ST7789 320x170\n"
-        "Wi-Fi 802.11 b/g/n\n"
-        "Bluetooth 5.0 LE\n"
-        "IR TX/RX (GPIO 4/5)");
+        "Flash: 16MB  PSRAM: 8MB\n");
 }
 
 static void open_brightness(void *u)   { (void)u; nav_push(brightness_view_create()); }
