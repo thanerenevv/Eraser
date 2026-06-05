@@ -106,7 +106,7 @@ static void home_on_destroy(AppView *v) {
 
 AppView *home_view_create(void) {
     AppView *v = app_view_new();
-    v->root = screen_base_create("RF MULTITOOL", false);
+    v->root = screen_base_create("Eraser", false);
     lv_obj_t *scr = v->root;
 
     HomeCtx *ctx = (HomeCtx *)calloc(1, sizeof(HomeCtx));

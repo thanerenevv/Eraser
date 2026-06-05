@@ -1,0 +1,19 @@
+.pio/build/esp32-s3-n16r8/FrameworkArduino/MD5Builder.cpp.o: \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/MD5Builder.cpp \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/HEXBuilder.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/WString.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/pgmspace.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/Stream.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/Print.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/newlib/platform_include/stdio.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/WString.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/Printable.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/MD5Builder.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_system/include/esp_system.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_err.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_compiler.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_attr.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_bit_defs.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_idf_version.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_rom/include/esp_rom_md5.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/HashBuilder.h

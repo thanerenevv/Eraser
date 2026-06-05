@@ -1,0 +1,34 @@
+.pio/build/esp32-s3-n16r8/lib9d3/BLE/BLEUUID.cpp.o: \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/libraries/BLE/src/BLEUUID.cpp \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/soc/esp32s3/include/soc/soc_caps.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/qio_opi/include/sdkconfig.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/libraries/BLE/src/BLEUUID.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/WString.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/pgmspace.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/bt/host/nimble/nimble/nimble/host/include/host/ble_uuid.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-log.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_timer/include/esp_timer.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_err.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_compiler.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_hw_support/include/esp_etm.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_rom/esp32s3/include/esp32s3/rom/ets_sys.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/soc/esp32s3/include/soc/soc.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_assert.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_bit_defs.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/soc/esp32s3/register/soc/reg_base.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/log/include/esp_log.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_rom/include/esp_rom_sys.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/soc/esp32s3/include/soc/reset_reasons.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/log/include/esp_log_config.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/log/include/esp_log_level.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/log/include/esp_log_color.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/log/include/esp_log_buffer.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/log/include/esp_log_timestamp.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/log/include/esp_log_write.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/log/include/esp_log_format.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/log/include/esp_log_args.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_macros.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_assert.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/log/include/esp_log_attr.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_common/include/esp_attr.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/log/include/esp_private/log_attr.h
