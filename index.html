@@ -395,11 +395,11 @@
 <body>
 
   <!-- ── Header ────────────────────────────────────── -->
-  <header class="header">
+  <header class="header" style="margin-top: 40px;">
     <div class="logo-row">
       <div class="wordmark" id="wordmark"></div>
     </div>
-    <p class="tagline">ESP32-S3 frequency analyzer &amp; RF multitool</p>
+    
 
   </header>
 
@@ -466,8 +466,7 @@
     </a>
     <div class="footer-sep"></div>
     <span>Requires Chrome or Edge</span>
-    <div class="footer-sep"></div>
-    <span>Web Serial API</span>
+
   </footer>
 
   <script>
@@ -641,7 +640,7 @@
     (function typeWordmark() {
       const el     = document.getElementById('wordmark');
       const text   = 'ERASER';
-      const delay  = 1000;  // ms per character
+      const delay  = 180;   // ms per character
       const start  = 280;   // initial pause
       let   i      = 0;
 
