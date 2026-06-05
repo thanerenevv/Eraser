@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eraser — Firmware Installer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module" src="https://cdn.jsdelivr.net/npm/esp-web-tools@10/dist/web/install-button.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow:       #FFD100;
+      --yellow-hover: #F0C300;
+      --yellow-dim:   rgba(255, 209, 0, 0.10);
+      --yellow-ring:  rgba(255, 209, 0, 0.35);
+      --text:         #0E0E0E;
+      --text-2:       #5A5A5A;
+      --text-3:       #A0A0A0;
+      --border:       #E5E5E5;
+      --bg:           #FFFFFF;
+      --bg-2:         #F6F6F6;
+      --radius-card:  16px;
+      --radius-btn:   10px;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 64px 20px 48px;
+    }
+
+    /* ─── Header ──────────────────────────────────── */
+    .header {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      background: var(--yellow);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wordmark {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      position: relative;
+      display: inline-block;
+    }
+
+    .wordmark::after {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 0.85em;
+      background: var(--yellow);
+      vertical-align: middle;
+      margin-left: 2px;
+      border-radius: 1px;
+      opacity: 0;
+      transition: opacity 0.1s;
+    }
+
+    .wordmark.typing::after {
+      opacity: 1;
+      animation: cursor-blink 0.6s step-end infinite;
+    }
+
+    .wordmark.done::after {
+      animation: cursor-fade 0.4s forwards;
+    }
+
+    @keyframes cursor-blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    @keyframes cursor-fade {
+      from { opacity: 1; }
+      to   { opacity: 0; }
+    }
+
+    .tagline {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--text-2);
+      font-weight: 400;
+      letter-spacing: 0.01em;
+    }
+
+    .chip-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px 4px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--text-2);
+      letter-spacing: 0.04em;
+    }
+
+    .badge.chip::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 2px;
+      background: var(--yellow);
+    }
+
+    /* ─── Card ────────────────────────────────────── */
+    .card {
+      width: 100%;
+      max-width: 460px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+    }
+
+    /* ─── Version row ─────────────────────────────── */
+    .version-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-2);
+    }
+
+    .row-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      white-space: nowrap;
+    }
+
+    .version-select {
+      flex: 1;
+      padding: 7px 30px 7px 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .version-select:focus {
+      outline: none;
+      border-color: var(--yellow);
+      box-shadow: 0 0 0 3px var(--yellow-ring);
+    }
+
+    .version-select:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ─── Steps ───────────────────────────────────── */
+    .steps {
+      padding: 24px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--yellow-dim);
+      border: 1.5px solid var(--yellow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text);
+      margin-top: 1px;
+    }
+
+    .step-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .step-desc {
+      font-size: 12.5px;
+      color: var(--text-2);
+      margin-top: 2px;
+      line-height: 1.55;
+    }
+
+    /* ─── Flash area ──────────────────────────────── */
+    .flash-area {
+      padding: 4px 20px 20px;
+    }
+
+    esp-web-install-button {
+      display: block;
+    }
+
+    .flash-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 20px;
+      background: var(--yellow);
+      color: var(--text);
+      border: none;
+      border-radius: var(--radius-btn);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s;
+      letter-spacing: -0.01em;
+    }
+
+    .flash-btn:hover {
+      background: var(--yellow-hover);
+      box-shadow: 0 2px 12px rgba(255, 209, 0, 0.45);
+    }
+
+    .flash-btn:active {
+      transform: scale(0.99);
+    }
+
+    .flash-btn svg {
+      flex-shrink: 0;
+    }
+
+    .unsupported-msg {
+      display: block;
+      padding: 12px 16px;
+      background: #FFFBDE;
+      border: 1px solid #FFE566;
+      border-radius: var(--radius-btn);
+      font-size: 13px;
+      color: #7A6000;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .unsupported-msg a {
+      color: inherit;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .btn-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px;
+      border-radius: var(--radius-btn);
+      background: var(--bg-2);
+      border: 1px dashed var(--border);
+      font-size: 13px;
+      color: var(--text-3);
+      gap: 8px;
+    }
+
+    /* ─── Status bar ──────────────────────────────── */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 20px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-2);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-3);
+      min-height: 40px;
+    }
+
+    .status-dot {
+      flex-shrink: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-3);
+      transition: background 0.3s;
+    }
+    .status-dot.loading  { background: var(--yellow); animation: blink 1s ease-in-out infinite; }
+    .status-dot.ready    { background: #22C55E; }
+    .status-dot.error    { background: #EF4444; }
+    .status-dot.warning  { background: var(--yellow); }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.25; }
+    }
+
+    /* ─── Footer ──────────────────────────────────── */
+    .footer {
+      margin-top: 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    .footer a {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--text-3);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer a:hover { color: var(--text); }
+
+    .footer-sep {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    /* ─── Loader spinner ──────────────────────────── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--border);
+      border-top-color: var(--yellow);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ────────────────────────────────────── -->
+  <header class="header">
+    <div class="logo-row">
+      <div class="wordmark" id="wordmark"></div>
+    </div>
+    <p class="tagline">ESP32-S3 frequency analyzer &amp; RF multitool</p>
+
+  </header>
+
+  <!-- ── Card ──────────────────────────────────────── -->
+  <main class="card">
+
+    <!-- Version selector -->
+    <div class="version-row">
+      <select class="version-select" id="versionSelect" disabled>
+        <option>Loading releases…</option>
+      </select>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Select a firmware version</div>
+          <div class="step-desc">Choose a release from the dropdown above, or use the latest build from the master branch.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Connect Eraser via USB</div>
+          <div class="step-desc">Plug in the USB-C cable. If prompted, hold <strong>BOOT</strong> and press <strong>RESET</strong> to enter download mode.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Flash the firmware</div>
+          <div class="step-desc">Click below, select your serial port from the browser dialog, and wait for completion.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flash button -->
+    <div class="flash-area">
+      <div id="installContainer">
+        <div class="btn-placeholder">
+          <div class="spinner"></div>
+          Preparing installer…
+        </div>
+      </div>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <div class="status-dot loading" id="statusDot"></div>
+      <span id="statusText">Fetching available releases…</span>
+    </div>
+
+  </main>
+
+  <!-- ── Footer ────────────────────────────────────── -->
+  <footer class="footer">
+    <a href="https://github.com/thanerenevv/Eraser" target="_blank" rel="noopener">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+      </svg>
+      GitHub
+    </a>
+    <div class="footer-sep"></div>
+    <span>Requires Chrome or Edge</span>
+    <div class="footer-sep"></div>
+    <span>Web Serial API</span>
+  </footer>
+
+  <script>
+    const REPO       = 'thanerenevv/Eraser';
+    const BRANCH     = 'master';
+    const BUILD_DIR  = '.pio/build/esp32-s3-n16r8';
+    const RAW        = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${BUILD_DIR}`;
+
+    const FLASH_PARTS_DEV = {
+      bootloader: `${RAW}/bootloader.bin`,
+      partitions: `${RAW}/partitions.bin`,
+      firmware:   `${RAW}/firmware.bin`,
+    };
+
+    // ESP32-S3 standard PlatformIO flash offsets
+    const OFFSETS = {
+      bootloader: 0x0,      // 0
+      partitions: 0x8000,   // 32768
+      firmware:   0x10000,  // 65536
+    };
+
+    let blobUrl = null;
+
+    const sel       = document.getElementById('versionSelect');
+    const container = document.getElementById('installContainer');
+    const dot       = document.getElementById('statusDot');
+    const statusTxt = document.getElementById('statusText');
+
+    function setStatus(state, msg) {
+      dot.className = 'status-dot ' + state;
+      statusTxt.textContent = msg;
+    }
+
+    /* Build a Blob URL for a manifest so esp-web-tools can load it */
+    function buildManifestUrl(version, parts) {
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+      const manifest = {
+        name: 'Eraser',
+        version,
+        builds: [{
+          chipFamily: 'ESP32-S3',
+          parts: [
+            { path: parts.bootloader, offset: OFFSETS.bootloader },
+            { path: parts.partitions, offset: OFFSETS.partitions },
+            { path: parts.firmware,   offset: OFFSETS.firmware   },
+          ],
+        }],
+      };
+      const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+      blobUrl = URL.createObjectURL(blob);
+      return blobUrl;
+    }
+
+    /* Recreate the install button with a new manifest */
+    function renderButton(manifestUrl) {
+      container.innerHTML = '';
+      const el = document.createElement('esp-web-install-button');
+      el.setAttribute('manifest', manifestUrl);
+      el.innerHTML = `
+        <button slot="activate" class="flash-btn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          Flash Firmware
+        </button>
+        <span slot="unsupported" class="unsupported-msg">
+          Web Serial is not supported in this browser.<br>
+          Please use <a href="https://www.google.com/chrome/" target="_blank">Chrome</a>
+          or <a href="https://www.microsoft.com/edge" target="_blank">Edge</a>.
+        </span>
+      `;
+      container.appendChild(el);
+    }
+
+    /* Find a .bin asset by name inside a release's assets array */
+    function findAsset(assets, name) {
+      const a = assets.find(a =>
+        a.name === name || a.name.toLowerCase().endsWith('/' + name)
+      );
+      return a ? a.browser_download_url : null;
+    }
+
+    /* Called whenever the version dropdown changes */
+    function onVersionChange() {
+      const opt  = sel.options[sel.selectedIndex];
+      const type = opt.dataset.type;
+      const ver  = opt.value;
+
+      if (type === 'dev') {
+        const url = buildManifestUrl('dev-' + BRANCH, FLASH_PARTS_DEV);
+        renderButton(url);
+        setStatus('ready', `Using latest build from ${BRANCH} branch`);
+        return;
+      }
+
+      // Release: parse stored asset list
+      let assets = [];
+      try { assets = JSON.parse(opt.dataset.assets || '[]'); } catch (_) {}
+
+      const parts = {
+        bootloader: findAsset(assets, 'bootloader.bin'),
+        partitions: findAsset(assets, 'partitions.bin'),
+        firmware:   findAsset(assets, 'firmware.bin'),
+      };
+
+      if (!parts.firmware) {
+        container.innerHTML = `
+          <div class="btn-placeholder" style="color:#999;flex-direction:column;gap:4px;padding:16px;text-align:center;">
+            <span>No <code style="font-size:11px">firmware.bin</code> found in release <strong>${ver}</strong>.</span>
+            <span style="font-size:11px;margin-top:2px;">Attach firmware.bin, partitions.bin and bootloader.bin as release assets.</span>
+          </div>`;
+        setStatus('warning', `Release ${ver} has no firmware assets`);
+        return;
+      }
+
+      // Fill in dev fallbacks if release is missing bootloader/partitions
+      if (!parts.bootloader) parts.bootloader = FLASH_PARTS_DEV.bootloader;
+      if (!parts.partitions) parts.partitions = FLASH_PARTS_DEV.partitions;
+
+      const url = buildManifestUrl(ver, parts);
+      renderButton(url);
+      setStatus('ready', `Version ${ver} ready to flash`);
+    }
+
+    /* Fetch GitHub releases and populate the dropdown */
+    async function loadReleases() {
+      try {
+        const res      = await fetch(`https://api.github.com/repos/${REPO}/releases`);
+        const releases = res.ok ? await res.json() : [];
+
+        sel.innerHTML = '';
+
+        // Always offer the dev/master option first
+        const devOpt = document.createElement('option');
+        devOpt.value          = 'dev';
+        devOpt.dataset.type   = 'dev';
+        devOpt.textContent    = `Latest build  (${BRANCH})`;
+        sel.appendChild(devOpt);
+
+        if (Array.isArray(releases) && releases.length > 0) {
+          releases.forEach(r => {
+            const opt = document.createElement('option');
+            opt.value          = r.tag_name;
+            opt.dataset.type   = 'release';
+            opt.dataset.assets = JSON.stringify(r.assets || []);
+            opt.textContent    = r.tag_name + (r.prerelease ? '  (pre-release)' : '');
+            sel.appendChild(opt);
+          });
+          setStatus('ready', `${releases.length} release${releases.length > 1 ? 's' : ''} found`);
+        } else {
+          setStatus('ready', 'No releases yet — using master branch build');
+        }
+
+        sel.disabled = false;
+        onVersionChange();
+
+      } catch (e) {
+        sel.innerHTML = '<option data-type="dev" value="dev">Latest build (master)</option>';
+        sel.disabled  = false;
+        setStatus('error', 'Could not reach GitHub API — defaulting to master branch');
+        onVersionChange();
+      }
+    }
+
+    sel.addEventListener('change', onVersionChange);
+    loadReleases();
+
+    // Typing animation
+    (function typeWordmark() {
+      const el     = document.getElementById('wordmark');
+      const text   = 'ERASER';
+      const delay  = 1000;  // ms per character
+      const start  = 280;   // initial pause
+      let   i      = 0;
+
+      el.classList.add('typing');
+      el.textContent = '';
+
+      function typeNext() {
+        if (i < text.length) {
+          el.textContent += text[i++];
+          setTimeout(typeNext, delay);
+        } else {
+          el.classList.remove('typing');
+          el.classList.add('done');
+          setTimeout(() => el.classList.remove('done'), 500);
+        }
+      }
+
+      setTimeout(typeNext, start);
+    })();
+  </script>
+</body>
+</html>
