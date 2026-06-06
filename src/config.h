@@ -65,3 +65,10 @@
 #define ETH_MISO_PIN   GPIO_PIN_4   // GPIO 46
 #define ETH_MOSI_PIN   GPIO_PIN_5   // GPIO 47
 #define ETH_CS_PIN     GPIO_PIN_6   // GPIO 48
+
+// NRF24L01+ wiring (adjust to match your physical connections)
+#define NRF24_CE_PIN    9
+#define NRF24_CSN_PIN  10
+#define NRF24_SCK_PIN  12
+#define NRF24_MISO_PIN 13
+#define NRF24_MOSI_PIN 11

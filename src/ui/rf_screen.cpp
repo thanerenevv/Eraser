@@ -2,6 +2,7 @@
 #include "views.h"
 #include "screen_base.h"
 #include "theme.h"
+#include "mousejack_screen.h"
 #include "../config.h"
 #include "../rf_hal.h"
 #include <Arduino.h>
@@ -553,153 +554,28 @@ static AppView *nrf24_occ_view_create(void) {
     return v;
 }
 
-static const char *k_device_types[] = {
-    "ESB Unknown", "NRF24 Node", "Keyboard", "Gamepad", "IoT Sensor",
-};
-
-static void nrf24_devfind_gen(int seq, char *label, int lsz,
-                               char *value, int vsz, char *detail, int dsz) {
-    (void)seq;
-    int ch   = (int)random(2, 80);
-    int rssi = -(int)random(38, 75);
-    uint8_t addr[5];
-    for (int i = 0; i < 5; i++) addr[i] = (uint8_t)random(0, 256);
-    const char *dtype = k_device_types[random(0, 5)];
-    int pl = (int)random(1, 33);
-    uint8_t pkt[4];
-    for (int i = 0; i < 4; i++) pkt[i] = (uint8_t)random(0, 256);
-
-    snprintf(label, lsz, "CH%-3d  %02X:%02X:%02X", ch, addr[0], addr[1], addr[2]);
-    snprintf(value, vsz, "%ddBm", rssi);
-    snprintf(detail, dsz,
-             "Type: %s\nChannel: %d (%d MHz)\nRSSI: %d dBm\n"
-             "Addr: %02X:%02X:%02X:%02X:%02X\n"
-             "Payload len: %d  [%02X %02X %02X %02X...]\n"
-             "Protocol: Enhanced ShockBurst\n"
-             "HW: %s",
-             dtype, ch, 2400 + ch, rssi,
-             addr[0], addr[1], addr[2], addr[3], addr[4],
-             pl, pkt[0], pkt[1], pkt[2], pkt[3],
-             rf_hal_present() ? "NRF24 detected" : "Simulation");
-}
-
-static const char *k_mj_vendors[] = {
-    "Logitech Unifying", "Microsoft USB-A", "Dell Wireless",
-    "HP Wireless", "Generic HID",
-};
-
-static void nrf24_mousejack_gen(int seq, char *label, int lsz,
-                                 char *value, int vsz, char *detail, int dsz) {
-    (void)seq;
-    int ch   = (int)random(2, 77);
-    int rssi = -(int)random(42, 78);
-    uint8_t addr[5];
-    for (int i = 0; i < 5; i++) addr[i] = (uint8_t)random(0, 256);
-    const char *vendor = k_mj_vendors[random(0, 5)];
-    bool vuln = (bool)random(0, 2);
-
-    snprintf(label, lsz, "%s", vendor);
-    snprintf(value, vsz, vuln ? "VULN" : "OK");
-    snprintf(detail, dsz,
-             "Vendor: %s\nChannel: %d (%d MHz)\nRSSI: %d dBm\n"
-             "Addr: %02X:%02X:%02X:%02X:%02X\n"
-             "Encrypted: %s\nVulnerable: %s\n"
-             "Type: Wireless HID (ESB)\nHW: %s",
-             vendor, ch, 2400 + ch, rssi,
-             addr[0], addr[1], addr[2], addr[3], addr[4],
-             vuln ? "No" : "Yes",
-             vuln ? "YES - unencrypted TX" : "No",
-             rf_hal_present() ? "NRF24 detected" : "Simulation");
-}
-
-static const char *k_nrf24_rates[]  = { "250 Kbps", "1 Mbps", "2 Mbps" };
-
-static const ActivityCfg k_nrf24_bcast_cfg = {
-    LV_SYMBOL_AUDIO, "NRF24 TX TEST", "Select data rate, OK to start",
-    "Transmitting", "pkts", 5, 60,
-    k_nrf24_rates, 3, "Rate", false, false,
-};
-
-static void nrf24_open_chanscan(void *u) {
+static void nrf24_open_chscan(void *u) {
     (void)u;
     nav_push(spectrum_view_create_ex("2.4G CHANNELS", RF_BAND_24, true));
 }
 
-static void nrf24_pkt_gen(int seq, char *label, int lsz,
-                           char *value, int vsz, char *detail, int dsz) {
-    (void)seq;
-    int ch   = (int)random(0, 126);
-    int rssi = -(int)random(35, 80);
-    uint8_t addr[5], data[10];
-    for (int i = 0; i < 5; i++) addr[i] = (uint8_t)random(0, 256);
-    for (int i = 0; i < 10; i++) data[i] = (uint8_t)random(0, 256);
-
-    snprintf(label, lsz, "CH%-3d  %02X:%02X:%02X", ch, addr[0], addr[1], addr[2]);
-    snprintf(value, vsz, "%ddBm", rssi);
-    snprintf(detail, dsz,
-             "Channel: %d (%d MHz)\nRSSI: %d dBm\n"
-             "Addr: %02X:%02X:%02X:%02X:%02X\n"
-             "Payload[0-4]: %02X %02X %02X %02X %02X\n"
-             "Type: ESB  HW: %s",
-             ch, 2400 + ch, rssi,
-             addr[0], addr[1], addr[2], addr[3], addr[4],
-             data[0], data[1], data[2], data[3], data[4],
-             rf_hal_present() ? "NRF24 detected" : "Simulation");
+static void nrf24_open_occ(void *u) {
+    (void)u;
+    nav_push(nrf24_occ_view_create());
 }
 
-static const char *k_nrf24_addrs[] = {
-    "E7:E7:E7:E7:E7", "A0:A0:A0:A0:A0",
-    "C2:C2:C2:C2:C2", "Broadcast  0xFF",
-};
-
-static const ActivityCfg k_nrf24_ping_cfg = {
-    LV_SYMBOL_SHUFFLE, "NRF24 PING", "Select target, OK to ping",
-    "Pinging", "pings", 1, 180,
-    k_nrf24_addrs, 4, "Target", false, false,
-};
-
-static void nrf24_pkt_gen_ack(int seq, char *label, int lsz,
-                               char *value, int vsz, char *detail, int dsz) {
-    (void)seq;
-    int ch   = (int)random(0, 126);
-    int rssi = -(int)random(30, 70);
-    bool ack = random(0, 2);
-    uint8_t addr[5];
-    for (int i = 0; i < 5; i++) addr[i] = (uint8_t)random(0, 256);
-
-    snprintf(label, lsz, "CH%-3d  %s", ch, ack ? "ACK" : "NACK");
-    snprintf(value, vsz, "%ddBm", rssi);
-    snprintf(detail, dsz,
-             "Channel: %d (%d MHz)\nRSSI: %d dBm\n"
-             "Addr: %02X:%02X:%02X:%02X:%02X\n"
-             "AutoACK: %s\nHW: %s",
-             ch, 2400 + ch, rssi,
-             addr[0], addr[1], addr[2], addr[3], addr[4],
-             ack ? "Received" : "No response",
-             rf_hal_present() ? "NRF24 detected" : "Simulation");
+static void nrf24_open_mousejack(void *u) {
+    (void)u;
+    nav_push(mousejack_view_create());
 }
-
-static void nrf24_open_chscan(void *u)      { (void)u; nrf24_open_chanscan(NULL); }
-static void nrf24_open_sniffer(void *u)     { (void)u; nav_push(sim_scanner_create("ESB SNIFFER",    LV_SYMBOL_BLUETOOTH, "Rescan", "packets", 500, nrf24_pkt_gen)); }
-static void nrf24_open_ping(void *u)        { (void)u; nav_push(activity_view_create(&k_nrf24_ping_cfg)); }
-static void nrf24_open_prober(void *u)      { (void)u; nav_push(sim_scanner_create("ACK PROBER",     LV_SYMBOL_SHUFFLE,   "Rescan", "probes",  700, nrf24_pkt_gen_ack)); }
-static void nrf24_open_occ(void *u)         { (void)u; nav_push(nrf24_occ_view_create()); }
-static void nrf24_open_devfind(void *u)     { (void)u; nav_push(sim_scanner_create("DEVICE FINDER",  LV_SYMBOL_CHARGE,    "Rescan", "devices", 800, nrf24_devfind_gen)); }
-static void nrf24_open_mousejack(void *u)   { (void)u; nav_push(sim_scanner_create("MOUSEJACK SCAN", LV_SYMBOL_WARNING,   "Rescan", "devices", 900, nrf24_mousejack_gen)); }
-static void nrf24_open_bcast(void *u)       { (void)u; nav_push(activity_view_create(&k_nrf24_bcast_cfg)); }
 
 AppView *nrf24_view_create(void) {
     static const MenuItem items[] = {
-        { LV_SYMBOL_EYE_OPEN, "Channel Scanner",  NULL, nrf24_open_chscan,    NULL },
-        { LV_SYMBOL_AUDIO,    "ESB Sniffer",      NULL, nrf24_open_sniffer,   NULL },
-        { LV_SYMBOL_SHUFFLE,  "Ping Test",        NULL, nrf24_open_ping,      NULL },
-        { LV_SYMBOL_LIST,     "ACK Prober",       NULL, nrf24_open_prober,    NULL },
-        { LV_SYMBOL_BARS,     "Channel Occ Map",  NULL, nrf24_open_occ,       NULL },
-        { LV_SYMBOL_CHARGE,   "Device Finder",    NULL, nrf24_open_devfind,   NULL },
-        { LV_SYMBOL_WARNING,  "MouseJack Scan",   NULL, nrf24_open_mousejack, NULL },
-        { LV_SYMBOL_AUDIO,    "TX Broadcaster",   NULL, nrf24_open_bcast,     NULL },
+        { LV_SYMBOL_EYE_OPEN, "Channel Scanner", NULL, nrf24_open_chscan,    NULL },
+        { LV_SYMBOL_BARS,     "Channel Occ Map", NULL, nrf24_open_occ,       NULL },
+        { LV_SYMBOL_WARNING,  "MouseJack",        NULL, nrf24_open_mousejack, NULL },
     };
-    return list_view_create("NRF24L01+", items, 8);
+    return list_view_create("NRF24L01+", items, 3);
 }
 
 static void open_cc1101(void *u) { (void)u; nav_push(cc1101_view_create()); }
