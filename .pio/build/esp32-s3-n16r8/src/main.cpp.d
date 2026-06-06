@@ -537,4 +537,4 @@
  .pio/libdeps/esp32-s3-n16r8/lvgl/src/core/../tick/lv_tick.h \
  .pio/libdeps/esp32-s3-n16r8/lvgl/src/core/../layouts/lv_layout.h \
  src/config.h src/display.h src/buttons.h src/settings_store.h \
- src/rf_hal.h src/ui/nav.h src/ui/menu.h
+ src/rf_hal.h src/ui/nav.h src/ui/menu.h src/ui/boot_screen.h

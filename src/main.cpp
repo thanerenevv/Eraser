@@ -9,6 +9,7 @@
 #include "rf_hal.h"
 #include "ui/nav.h"
 #include "ui/menu.h"
+#include "ui/boot_screen.h"
 
 static uint32_t g_last_activity_ms = 0;
 static bool     g_display_asleep   = false;
@@ -84,7 +85,7 @@ void setup(void) {
     g_last_activity_ms = millis();
 
     nav_init();
-    nav_set_root(home_view_create());
+    nav_set_root(boot_screen_create());
 }
 
 void loop(void) {
