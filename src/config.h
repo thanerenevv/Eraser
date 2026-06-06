@@ -66,9 +66,17 @@
 #define ETH_MOSI_PIN   GPIO_PIN_5   // GPIO 47
 #define ETH_CS_PIN     GPIO_PIN_6   // GPIO 48
 
-// NRF24L01+ wiring (adjust to match your physical connections)
+// NRF24L01+ wiring
 #define NRF24_CE_PIN    9
 #define NRF24_CSN_PIN  10
 #define NRF24_SCK_PIN  12
 #define NRF24_MISO_PIN 13
 #define NRF24_MOSI_PIN 11
+
+// CC1101 wiring — shares the same FSPI bus (SCK/MOSI/MISO) as NRF24,
+// so both can sit on the same 4-wire bus with separate CS pins.
+#define CC1101_SCK_PIN   12   // shared with NRF24_SCK_PIN
+#define CC1101_MISO_PIN  13   // shared with NRF24_MISO_PIN
+#define CC1101_MOSI_PIN  11   // shared with NRF24_MOSI_PIN
+#define CC1101_CS_PIN    14
+#define CC1101_GDO0_PIN  21

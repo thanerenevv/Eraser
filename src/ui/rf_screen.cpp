@@ -3,6 +3,7 @@
 #include "screen_base.h"
 #include "theme.h"
 #include "mousejack_screen.h"
+#include "cc1101_screen.h"
 #include "../config.h"
 #include "../rf_hal.h"
 #include <Arduino.h>
@@ -250,31 +251,6 @@ static AppView *spectrum_view_create_ex(const char *title, RfBand start_band, bo
     return v;
 }
 
-static const char *k_cc1101_protos[] = { "OOK", "ASK", "FSK", "2-FSK", "GFSK", "MSK" };
-static const char *k_cc1101_freqs[]  = {
-    "315.00", "433.92", "434.15", "868.00", "868.30", "869.85", "915.00", "916.50"
-};
-
-static void cc1101_pkt_gen(int seq, char *label, int lsz,
-                            char *value, int vsz, char *detail, int dsz) {
-    (void)seq;
-    const char *proto = k_cc1101_protos[random(0, 6)];
-    const char *freq  = k_cc1101_freqs[random(0, 8)];
-    int rssi = -(int)random(40, 90);
-    uint8_t d[8];
-    for (int i = 0; i < 8; i++) d[i] = (uint8_t)random(0, 256);
-
-    snprintf(label, lsz, "%s  %s MHz", proto, freq);
-    snprintf(value, vsz, "%ddBm", rssi);
-    snprintf(detail, dsz,
-             "Protocol: %s\nFreq: %s MHz\nRSSI: %d dBm\n"
-             "Data: %02X %02X %02X %02X %02X %02X %02X %02X\n"
-             "HW: %s",
-             proto, freq, rssi,
-             d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7],
-             rf_hal_present() ? "CC1101 detected" : "Simulation");
-}
-
 #define FREQSCAN_BINS 40
 
 typedef struct {
@@ -381,21 +357,10 @@ static AppView *cc1101_freqscan_view_create(void) {
     return v;
 }
 
-static const char *k_cc1101_sigs[] = {
-    "433.92 MHz  OOK", "868.30 MHz  FSK",
-    "315.00 MHz  ASK", "915.00 MHz  2-FSK",
-};
-
-static const ActivityCfg k_cc1101_replay_cfg = {
-    LV_SYMBOL_LOOP, "SIGNAL REPLAY", "Select signal, OK to send",
-    "Replaying", "pulses", 6, 90,
-    k_cc1101_sigs, 4, "Signal", false, false,
-};
-
 static void cc1101_open_spectrum(void *u) { (void)u; nav_push(spectrum_view_create_ex("CC1101 SPECTRUM", RF_BAND_433, false)); }
-static void cc1101_open_sniffer(void *u)  { (void)u; nav_push(sim_scanner_create("CC1101 SNIFFER", LV_SYMBOL_EYE_OPEN, "Rescan", "packets", 600, cc1101_pkt_gen)); }
+static void cc1101_open_sniffer(void *u)  { (void)u; nav_push(cc1101_sniffer_view_create()); }
 static void cc1101_open_freqscan(void *u) { (void)u; nav_push(cc1101_freqscan_view_create()); }
-static void cc1101_open_replay(void *u)   { (void)u; nav_push(activity_view_create(&k_cc1101_replay_cfg)); }
+static void cc1101_open_replay(void *u)   { (void)u; nav_push(cc1101_replay_view_create()); }
 
 AppView *cc1101_view_create(void) {
     static const MenuItem items[] = {

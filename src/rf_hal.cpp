@@ -1,6 +1,8 @@
 #include "rf_hal.h"
+#include "config.h"
 #include <Arduino.h>
 #include <math.h>
+#include <SmartRC_CC1101.h>
 
 #define NOISE_FLOOR_DBM  (-95.0f)
 #define NOISE_RANGE        1.2f
@@ -68,8 +70,9 @@ static const struct {
 };
 
 static CarrierState g_state[RF_BAND_COUNT][MAX_CARRIERS];
-static uint32_t     g_last_ms = 0;
-static bool         g_inited  = false;
+static uint32_t     g_last_ms  = 0;
+static bool         g_inited   = false;
+static bool         g_cc1101_ok = false;
 
 void rf_hal_init(void) {
     randomSeed(esp_random());
@@ -83,6 +86,16 @@ void rf_hal_init(void) {
     }
     g_last_ms = now;
     g_inited  = true;
+
+    // Probe CC1101 on FSPI
+    SmartRC_cc1101.setSpiPin(CC1101_SCK_PIN, CC1101_MISO_PIN, CC1101_MOSI_PIN, CC1101_CS_PIN);
+    SmartRC_cc1101.setGDO0(CC1101_GDO0_PIN);
+    SmartRC_cc1101.Init();
+    g_cc1101_ok = SmartRC_cc1101.getCC1101();
+    if (g_cc1101_ok) {
+        SmartRC_cc1101.setMHZ(433.92f);
+        SmartRC_cc1101.SetRx();
+    }
 }
 
 void rf_hal_tick(void) {
@@ -116,7 +129,7 @@ void rf_hal_tick(void) {
     }
 }
 
-bool        rf_hal_present(void)          { return false; }
+bool        rf_hal_present(void)          { return g_cc1101_ok; }
 const char *rf_hal_chip(RfBand b)         { return k_bands[b].chip; }
 const char *rf_band_name(RfBand b)        { return k_bands[b].name; }
 float       rf_band_lo_mhz(RfBand b)      { return k_bands[b].lo; }
@@ -125,6 +138,16 @@ float       rf_hal_noise_floor(void)       { return NOISE_FLOOR_DBM; }
 
 int rf_hal_rssi(RfBand band, float freq_mhz) {
     if (!g_inited) rf_hal_init();
+
+    // Use real hardware for sub-GHz bands when CC1101 is present
+    if (g_cc1101_ok && band != RF_BAND_24) {
+        SmartRC_cc1101.SetRx(freq_mhz);
+        delayMicroseconds(600);
+        int rssi = SmartRC_cc1101.getRssi();
+        if (rssi > -20)  rssi = -20;
+        if (rssi < -110) rssi = -110;
+        return rssi;
+    }
 
     float lo = k_bands[band].lo, hi = k_bands[band].hi;
     float x  = (freq_mhz - lo) / (hi - lo);

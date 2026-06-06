@@ -1,4 +1,5 @@
 .pio/build/esp32-s3-n16r8/src/rf_hal.cpp.o: src/rf_hal.cpp src/rf_hal.h \
+ src/config.h \
  /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h \
  /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/newlib/platform_include/stdio.h \
  /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/qio_opi/include/sdkconfig.h \
@@ -167,4 +168,7 @@
  /Users/thanerenev/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/esp_hw_support/include/hal/cpu_ll.h \
  /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/freertos_stats.h \
  /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/io_pin_remap.h \
- /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h \
+ .pio/libdeps/esp32-s3-n16r8/SmartRC-CC1101-Driver-Lib/SmartRC_CC1101.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
+ /Users/thanerenev/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h
